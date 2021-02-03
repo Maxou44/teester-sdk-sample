@@ -1,0 +1,53 @@
+<!-- Import script (by client) -->
+<script src="https://sdk.teester.com/loader.js"></script>
+
+<div id="player"></div>
+<button id="btnPlay">Play</button>
+<button id="btnPause">Pause</button>
+<button id="btnMute">Mute</button>
+<button id="btnUnmute">Unmute</button>
+
+<script>
+    /* CLIENT CODE SAMPLE */
+    window.onTeesterReady = (window.onTeesterReady || []);
+    window.onTeesterReady.push((SDK) => {
+        console.log("Teester SDK Ready!", SDK);
+
+        // Test getVersion()
+        console.log('getVersion()', SDK.getVersion());
+
+        // Create player
+        const player = SDK.init({
+            type: 'player',
+            args: {
+                id: 'DEMO',
+                autoplay: 1,
+            }
+        }, document.querySelector('#player'))
+
+        // Controlable player
+        console.log(player);
+
+        // Button to interact with the video
+        document.querySelector('#btnPlay').addEventListener('click', () => { player.play() })
+        document.querySelector('#btnPause').addEventListener('click', () => { player.pause() })
+        document.querySelector('#btnMute').addEventListener('click', () => { player.mute() })
+        document.querySelector('#btnUnmute').addEventListener('click', () => { player.unmute() })
+
+        player.onPlay(() => { console.log('Video is playing'); });
+        player.onPause(() => { console.log('Video isn\'t playing'); });
+        player.onEnded(() => { console.log('Video ended'); });
+        player.onProgress((p) => { console.log(p, `Video progress: ${p.second}sec / ${p.percent}%`); });
+    });
+    /* END OF CLIENT CODE SAMPLE */
+
+    /* CONTENTSQUARE GLOBAL HOOK */
+    window.onTeesterReady = (window.onTeesterReady || []);
+    window.onTeesterReady.push((SDK) => {
+        SDK.addEventListener('*', (evtType, evtData, video) => {
+            console.log('EVENT_CONTENTSQUARE', evtType, evtData, video);
+        });
+    });
+    /* END OF CONTENTSQUARE GLOBAL HOOK */
+
+</script>
